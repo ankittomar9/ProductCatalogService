@@ -5,6 +5,8 @@ import com.company.productcatalogservice.models.Category;
 import com.company.productcatalogservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,10 +21,13 @@ public class FakeStoreProductService  implements IProductService{
     }*/
 
     public Product getProductById(Long productId) {
-        RestTemplate restTemplate = restTemplateBuilder.build();
-       FakeStoreProductDto fakeStoreProductDto
-               = restTemplate.getForEntity("http://fakestoreapi.com/products/{productId}", FakeStoreProductDto.class, productId).getBody();
-        return from(fakeStoreProductDto);
+        RestTemplate restTemplate = restTemplateBuilder.build();  // object mapper jackson
+       ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity
+               = restTemplate.getForEntity("http://fakestoreapi.com/products/{productId}", FakeStoreProductDto.class, productId);
+        if(fakeStoreProductDtoResponseEntity.getStatusCode().equals(HttpStatusCode.valueOf(200)) && fakeStoreProductDtoResponseEntity.getBody() != null) {
+            return from(fakeStoreProductDtoResponseEntity.getBody());
+        }
+       return null;
     }
 
 
@@ -33,7 +38,7 @@ public class FakeStoreProductService  implements IProductService{
     product.setName(fakeStoreProductDto.getTitle());
     product.setDescription(fakeStoreProductDto.getDescription());
     product.setPrice(fakeStoreProductDto.getPrice());
-    product.setImageURL(fakeStoreProductDto.getImage());
+    product.setImageUrl(fakeStoreProductDto.getImage());
         Category category  = new Category();
         category.setName(fakeStoreProductDto.getCategory());
         product.setCategory(category);
