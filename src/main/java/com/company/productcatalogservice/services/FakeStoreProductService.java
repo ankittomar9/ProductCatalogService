@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class FakeStoreProductService  implements IProductService{
 
@@ -30,6 +33,20 @@ public class FakeStoreProductService  implements IProductService{
        return null;
     }
 
+    @Override
+    public List<Product> getAllProducts() {
+        List<Product> products = new ArrayList<>();
+      RestTemplate restTemplate = restTemplateBuilder.build();
+      ResponseEntity<FakeStoreProductDto[]> listResponseEntity=
+
+              restTemplate.getForEntity("http://fakestoreapi.com/products",
+                      FakeStoreProductDto[].class); // Study generics type always return simple primitive data type like array
+   //put  if else here if required
+    for(FakeStoreProductDto fakeStoreProductDto : listResponseEntity.getBody()) {
+        products.add(from(fakeStoreProductDto));
+    }
+    return products;
+    }
 
 
     private Product from(FakeStoreProductDto fakeStoreProductDto){

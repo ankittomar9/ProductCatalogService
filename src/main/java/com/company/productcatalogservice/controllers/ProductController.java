@@ -7,6 +7,11 @@ import com.company.productcatalogservice.models.Category;
 import com.company.productcatalogservice.models.Product;
 import com.company.productcatalogservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -32,12 +37,19 @@ public class ProductController {
         //return null;
     }
     @GetMapping("{productId}")
-    public ProductDto findProductById(@PathVariable Long productId){
-        Product product =productService.getProductById(productId);
-        if(product==null){
-            return null;
+    public ResponseEntity<ProductDto> findProductById(@PathVariable Long productId){
+        MultiValueMap <String, String> headers = new LinkedMultiValueMap<>();
+        if(productId <=0){
+            headers.add("called by" , "Idiot ");
+            return  new ResponseEntity<>(null,headers, HttpStatus.NOT_FOUND);
         }
-        return from(product);
+
+        Product product =productService.getProductById(productId);
+        headers.add("called by" , "Ramesh ");
+        if(product==null){
+            return    new ResponseEntity<>(null,headers, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(from(product), headers,HttpStatus.OK);
     }
 
     private ProductDto from(Product product){
