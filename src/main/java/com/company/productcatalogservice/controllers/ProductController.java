@@ -92,9 +92,18 @@ public class ProductController {
 
         return productDto;
     }
+    //Self  To : Do
     @PostMapping("/products")
-    public Product createProduct(@RequestBody Product product){
-        return product;
+    public ProductDto createProduct(@RequestBody ProductDto product){
+        return null;
+    }
+
+    @PutMapping("/{id}")
+    public ProductDto replaceProduct(@PathVariable Long id ,
+                                     @RequestBody ProductDto request){
+        Product product=productService.getProductById(id,request);
+
+
     }
 
 
