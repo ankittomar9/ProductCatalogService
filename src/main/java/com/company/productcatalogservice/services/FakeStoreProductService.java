@@ -1,5 +1,6 @@
 package com.company.productcatalogservice.services;
 
+import com.company.productcatalogservice.clients.FakeStoreApiClient;
 import com.company.productcatalogservice.dtos.FakeStoreProductDto;
 import com.company.productcatalogservice.models.Category;
 import com.company.productcatalogservice.models.Product;
@@ -24,16 +25,17 @@ public class FakeStoreProductService  implements IProductService{
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
 
+    @Autowired
+    private FakeStoreApiClient fakeStoreApiClient;
+
    /* public FakeStoreProductService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplateBuilder = restTemplateBuilder;
     }*/
 
     public Product getProductById(Long productId) {
-        RestTemplate restTemplate = restTemplateBuilder.build();  // object mapper jackson
-       ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity
-               = restTemplate.getForEntity("http://fakestoreapi.com/products/{productId}", FakeStoreProductDto.class, productId);
-        if(fakeStoreProductDtoResponseEntity.getStatusCode().equals(HttpStatusCode.valueOf(200)) && fakeStoreProductDtoResponseEntity.getBody() != null) {
-            return from(fakeStoreProductDtoResponseEntity.getBody());
+        FakeStoreProductDto fakeStoreProductDto = fakeStoreApiClient.getProductById(productId);
+        if(fakeStoreApiClient != null) {
+            return from(fakeStoreProductDto);
         }
        return null;
     }
