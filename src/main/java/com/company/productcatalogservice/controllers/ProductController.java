@@ -99,12 +99,29 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ProductDto replaceProduct(@PathVariable Long id ,
-                                     @RequestBody ProductDto request){
-        Product product=productService.getProductById(id,request);
-
+    public ProductDto replaceProduct(@PathVariable Long id , @RequestBody ProductDto request){
+        Product productRequest = from(request);
+        Product product=productService.replaceProduct(id,productRequest);
+        return from(product);
 
     }
-
+    private Product from(ProductDto productDto) {
+        Product product = new Product();
+//        product.setCreatedAt(new Date());
+//        product.setLastUpdatedAt(new Date());
+//        product.setState(State.ACTIVE);
+        product.setId(productDto.getId());
+        product.setName(productDto.getName());
+        product.setPrice(productDto.getPrice());
+        product.setImageUrl(productDto.getImageUrl());
+        product.setDescription(productDto.getDescription());
+        if(productDto.getCategory() != null) {
+            Category category = new Category();
+            category.setId(productDto.getCategory().getId());
+            category.setName(productDto.getCategory().getName());
+            product.setCategory(category);
+        }
+        return product;
+    }
 
 }
