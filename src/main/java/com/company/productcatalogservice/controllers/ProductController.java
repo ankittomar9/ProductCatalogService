@@ -26,16 +26,38 @@ public class ProductController {
     private IProductService productService;
 
     
-    @GetMapping("/products")
-    public List<Product> getAllProducts(){
-        Product product = new Product();
+    @GetMapping()
+    public List<ProductDto> getAllProducts() {
+        List<ProductDto> productDtos = new ArrayList<>();
+        List<Product> products = productService.getAllProducts();
+        for (Product product : products) {
+            productDtos.add(from(product));
+        }
+
+        return productDtos;
+    }
+        /*Product product = new Product();
         product.setId(2L);
         product.setName("Android");
         List<Product> products = new ArrayList<>();
         products.add(product);
         return products;
-        //return null;
+        //return null;*/
+
+        /*
+          @GetMapping("/products")
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        List<ProductDto> productDtos = new ArrayList<>();
+        List<Product> products = productService.getAllProducts();
+        for (Product product : products) {
+            productDtos.add(from(product)); // Assuming from(Product product) converts Product to ProductDto
+        }
+
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
+  }
+         */
+
     @GetMapping("{productId}")
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long productId){
         MultiValueMap <String, String> headers = new LinkedMultiValueMap<>();
