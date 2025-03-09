@@ -7,6 +7,7 @@ import com.company.productcatalogservice.models.Category;
 import com.company.productcatalogservice.models.Product;
 import com.company.productcatalogservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,19 @@ public class ProductController {
 
 
     @Autowired
-    private IProductService productService;
+    @Qualifier("sps")
+    private IProductService productService2;
 
-    
+//    @Autowired
+//    @Qualifier("fkps")
+//    private IProductService productService1;
+
+
+
     @GetMapping()
     public List<ProductDto> getAllProducts() {
         List<ProductDto> productDtos = new ArrayList<>();
-        List<Product> products = productService.getAllProducts();
+        List<Product> products = productService2.getAllProducts();
         for (Product product : products) {
             productDtos.add(from(product));
         }
@@ -68,7 +75,7 @@ public class ProductController {
                 throw new IllegalArgumentException("Please try with productId >0");
             }
 
-            Product product = productService.getProductById(productId);
+            Product product = productService2.getProductById(productId);
             headers.add("called by", "Ramesh ");
             if (product == null) {
                 return new ResponseEntity<>(null, headers, HttpStatus.BAD_REQUEST);
@@ -100,15 +107,18 @@ public class ProductController {
         return productDto;
     }
     //Self  To : Do
-    @PostMapping("/products")
-    public ProductDto createProduct(@RequestBody ProductDto product){
-        return null;
+    @PostMapping
+    public ProductDto createProduct(@RequestBody ProductDto productDto){
+
+       Product input =from(productDto);
+       Product output = productService2.save(input);
+       return from(output);
     }
 
     @PutMapping("/{id}")
     public ProductDto replaceProduct(@PathVariable Long id , @RequestBody ProductDto request){
         Product productRequest = from(request);
-        Product product=productService.replaceProduct(id,productRequest);
+        Product product=productService2.replaceProduct(id,productRequest);
         return from(product);
 
     }

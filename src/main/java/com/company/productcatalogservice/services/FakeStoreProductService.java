@@ -4,6 +4,7 @@ import com.company.productcatalogservice.clients.FakeStoreApiClient;
 import com.company.productcatalogservice.dtos.FakeStoreProductDto;
 import com.company.productcatalogservice.models.Category;
 import com.company.productcatalogservice.models.Product;
+import com.company.productcatalogservice.repos.ProductRepo;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -19,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("fkps")
 public class FakeStoreProductService  implements IProductService{
 
     @Autowired
@@ -27,6 +28,8 @@ public class FakeStoreProductService  implements IProductService{
 
     @Autowired
     private FakeStoreApiClient fakeStoreApiClient;
+    @Autowired
+    private ProductRepo productRepo;
 
    /* public FakeStoreProductService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplateBuilder = restTemplateBuilder;
@@ -63,8 +66,14 @@ public class FakeStoreProductService  implements IProductService{
     return from(response);
     }
 
+    // To do: learner
+    @Override
+    public Product save(Product product) {
+        return productRepo.save(product);
+    }
 
-//Engineering custom method for all methods using http methods
+
+    //Engineering custom method for all methods using http methods
     private <T> ResponseEntity<T> requestForEntity(String url, HttpMethod httpMethod, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
