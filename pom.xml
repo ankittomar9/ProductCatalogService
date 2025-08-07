@@ -65,13 +65,18 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-       <!--  https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>9.1.0</version>
-        </dependency>-->
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--  https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+         <dependency>
+             <groupId>com.mysql</groupId>
+             <artifactId>mysql-connector-j</artifactId>
+             <version>9.1.0</version>
+         </dependency>-->
 
 
     </dependencies>

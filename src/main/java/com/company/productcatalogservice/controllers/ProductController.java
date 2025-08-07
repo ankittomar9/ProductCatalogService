@@ -26,7 +26,7 @@ public class ProductController {
     @Autowired
     @Qualifier("sps")
     private IProductService productService2;
-
+// For demo of qualifier annotation
 //    @Autowired
 //    @Qualifier("fkps")
 //    private IProductService productService1;
